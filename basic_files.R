@@ -1,5 +1,0 @@
-# basic files
-
-z=9 + 3
-z
-9+34
