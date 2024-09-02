@@ -1,0 +1,129 @@
+---
+title: "01_intro_to_Rmd_U_Chowdhury"
+output: pdf_document
+date: "2024-09-01"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+```{r t}
+#Some arithmetic expression
+8+3
+log(2)
+t=((121/3)*(6*3))/(pi)
+t
+```
+
+```{r X Y}
+#create X & Y
+X= 14+ 17
+X
+Y= log(20)
+Y
+```
+
+```{r z s}
+#Calculation
+z=X+ Y ; z
+
+s=z+t ; s
+```
+
+```{r a b}
+#define and return vectors a and b
+a=c(4.1, 4.9, 7.8, 9.9); a
+b= 2*a; b
+
+#calculate mean and standard deviation
+mean(a)
+sd(b)
+
+#plot b against a
+plot(b,a)
+
+
+```
+
+# My Profile
+
+* 2031
+* PhD in Bioinformatics
+                   + USA
+                     - State: Indiana
+                     - City : Indianapolis
+\newpage
+```{r}
+library(oibiostat)
+data(frog)
+mean(frog$egg.size)
+
+
+```
+
+```{r}
+hist(frog$egg.size)
+```
+
+```{r}
+median(frog$egg.size)
+```
+
+```{r}
+sample.data = matrix(1:9, nrow=3, byrow=T)
+save(sample.data, file = "sample_of_data.Rdata")
+rm(list = ls())
+```
+
+```{r}
+load("sample_of_data.Rdata")
+
+boxplot(sample.data)
+```
+
+                     
+```{r}
+
+
+load("sample_of_data.Rdata")
+
+
+View(sample.data)
+
+
+
+
+```
+  
+```{r}
+
+print(sample.data)
+heatmap(sample.data, main = "Heatmap of Sample Data")
+```
+
+
+
+
+

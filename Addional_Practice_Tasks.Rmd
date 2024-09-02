@@ -1,0 +1,116 @@
+---
+title: "Addional_Practice_Tasks"
+author: "Upol Chowdhury"
+date: "2024-09-02"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+```{r}
+install.packages("HistData") 
+library(HistData)              
+data(arbuthnot)                
+
+```
+
+
+```{r}
+dim(arbuthnot)
+```
+```{r}
+names(arbuthnot)
+```
+```{r}
+View(arbuthnot$girls)
+```
+
+
+
+```{r}
+print(arbuthnot$girls)
+```
+## a simple plot of the number of girls
+baptized per year with the command
+
+```{r}
+plot(x = arbuthnot$year, y = arbuthnot$girls, type ="l")
+```
+```{r}
+arbuthnot$boys + arbuthnot$girls
+```
+##  plot of the total number of baptisms per year with the command
+```{r}
+plot(arbuthnot$year, arbuthnot$boys + arbuthnot$girls, type = "l")
+```
+```{r}
+arbuthnot$boys/(arbuthnot$boys + arbuthnot$girls)
+```
+\newpage
+## On my own
+
+```{r}
+#What years are included in this dataset?
+unique(present$year)
+
+```
+```{r}
+#What are the dimensions of the data frame and what are the variable or column names?
+dim(present)         
+names(present)       
+
+```
+
+```{r}
+# These counts compare to Arbuthnot’s? Are they on a similar scale
+
+summary(present$boys)      
+summary(present$girls)       
+summary(arbuthnot$boys)     
+summary(arbuthnot$girls)
+```
+```{r}
+#Does Arbuthnot’s observation about boys being born in greater proportion than girls hold up in the U.S.?
+mean(present$boys / present$girls)
+```
+```{r}
+# a plot that displays the boy-to-girl ratio for every year in the dataset.
+
+library(ggplot2)
+ggplot(present, aes(x = year, y = boys / girls)) +
+  geom_line() +
+  labs(title = "Boy-to-Girl Ratio Over the Years",
+       x = "Year", y = "Boy-to-Girl Ratio")
+
+```
+```{r}
+# The most total number of births in the U.S.
+present$total_births <- present$boys + present$girls
+max_birth_year <- present$year[which.max(present$total_births)]
+max_birth_year  
+
+```
+
