@@ -1,0 +1,325 @@
+---
+title: "Introduction_to_Data"
+author: "Upol Chowdhury"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+# Vectors
+```{r x y}
+x = c(1.7, 6.77, 8.9, 6)
+Y = 5 : 9 # integers from 5 to 9
+class(x)
+class(Y) # it identifies data structure od an object
+```
+```{r}
+a = c("Upol", "Chowdhury")
+a
+```
+```{r}
+b = c(x,Y)
+b
+```
+
+```{r}
+x + Y
+```
+```{r}
+x^2
+```
+```{r}
+2*x
+```
+```{r}
+z = Y + b
+z
+```
+
+```{r}
+z[7]
+z[8]
+z[7:9]
+
+z[-c(1,7)] #extract all elements from z rather than 1 and 7 indexed elements
+```
+
+```{r}
+x
+sum(x)
+```
+```{r}
+z
+prod(z)
+```
+```{r}
+min(z)
+max(Y)
+length(x)
+```
+
+```{r}
+
+matrix.a= cbind(x,Y)
+rownames(matrix.a) = c("A", "B", "C", "D", "E")
+matrix.a
+
+matrix.b = rbind(Y,x)
+colnames(matrix.b) = c("A", "B", "C", "D", "E")
+matrix.b
+```
+
+```{r}
+matrix.c = matrix(1:9, nrow = 3, ncol = 3)
+matrix.c
+
+matrix.d = matrix(1:9, nrow = 3, ncol = 3, byrow = FALSE)
+matrix.d
+
+matrix.e = matrix(1:9, nrow = 3, ncol = 3, byrow = TRUE)
+matrix.e
+
+
+
+
+```
+
+```{r}
+matrix.d + matrix.e
+```
+
+```{r}
+matrix.d * matrix.e
+```
+
+```{r}
+matrix.d^2
+```
+
+```{r}
+3*matrix.e
+```
+
+```{r}
+
+matrix.c
+
+matrix.c[1, 2] #extracts the element in row 1, column 2 of matrix.c
+
+matrix.c[1, 1:2] #extracts the elements in row 1, columns 1 and 2 of matrix.c
+
+matrix.c[1, ] #extracts all elements in row 1 of matrix.c
+
+matrix.c[, 1] #extracts all elements in column 1 of matrix.c
+
+matrix.c[, -1] #extracts all elements in all 
+```
+
+```{r}
+a
+b
+list(a, b)
+```
+
+```{r}
+id = c("A", "B", "C", "D", "E")
+weight = c(210, 140, 120, 180, 160)
+sex = c("male", "female", "female", "male", "male")
+age = c(22, 45, 35, 50, 70)
+patient.info = data.frame(id, weight, sex, age)
+patient.info
+```
+
+```{r}
+patient.info[, 2] #elements in second column of patient.info
+
+patient.info[1, 2] #first element of second column of patient.info
+
+patient.info$age #elements in age column of patient.info
+
+patient.info$sex[1] #first element in sex column
+
+list( patient.info$sex[1], patient.info$weight[2])
+```
+
+
+```{r}
+class(patient.info$sex)
+
+levels(patient.info$sex)
+
+class(patient.info$id)
+
+levels(patient.info$id)
+
+patient.info = data.frame(I(id), weight, sex, age) 
+class(patient.info$id) 
+```
+
+
+
+
+
+
+
+```{r}
+#load the data
+library(oibiostat)
+data("famuss")
+#OI Biostat Table 1.6
+famuss[c(1, 2, 3, 595), c("sex", "age", "race", "height", "weight",
+"actn3.r577x", "ndrm.ch")]
+```
+
+
+# numerical summaries
+
+```{r}
+library(oibiostat)
+data("frog")
+summary(frog$clutch.volume)
+```
+
+```{r}
+#range, minimum, maximum
+range(frog$clutch.volume)
+
+min(frog$clutch.volume)
+
+max(frog$clutch.volume)
+
+#median, quantiles
+median(frog$clutch.volume)
+
+quantile(frog$clutch.volume, probs = 0.25)
+
+quantile(frog$clutch.volume, probs = c(0.25, 0.50, 0.75))
+
+#measures of spread
+IQR(frog$clutch.volume)
+
+var(frog$clutch.volume)
+
+sd(frog$clutch.volume)
+
+#effect of missing values
+summary(frog$body.size)
+
+mean(frog$body.size)
+
+mean(frog$body.size, na.rm = TRUE)
+
+
+cor(frog$body.size, frog$clutch.volume, use = "complete.obs")   # corelation between two variables after dropping missing values
+```
+
+```{r}
+#basic histogram
+hist(frog$clutch.volume)
+```
+
+
+```{r}
+#OI Biostat Figure 1.18
+hist(frog$clutch.volume, breaks = 14, col = "dodgerblue",
+xlab = "Clutch Volume", ylab = "Frequency", ylim = c(0, 100),
+main = "Histogram of Clutch Volume Frequencies")
+```
+
+```{r}
+#basic boxplot: single variable
+boxplot(frog$clutch.volume)
+```
+
+```{r}
+#basic boxplot: y ~ x
+boxplot(famuss$ndrm.ch ~ famuss$actn3.r577x)
+```
+
+```{r}
+#basic scatterplot
+plot(frog$clutch.volume ~ frog$body.size)
+```
+
+```{r}
+#OI Biostat Figure 1.26
+plot(frog$clutch.volume ~ frog$body.size, col = "dodgerblue",
+bg = "slategray1", pch = 21,
+xlab = "Female Body Size (cm)",
+ylab = expression("Clutch Volume" ~ (mm^3)))
+```
+
+# subsetting the data
+
+```{r}
+famuss.older = subset(famuss, famuss$age > 27)
+range(famuss.older$age)
+```
+
+```{r}
+famuss.younger = subset(famuss, famuss$age <= 27)
+range(famuss.younger$age)
+```
+
+```{r}
+famuss.27 = subset(famuss, famuss$age == 27)
+range(famuss.27$age)
+```
+
+```{r}
+famuss.females = subset(famuss, famuss$sex == "Female")
+summary(famuss.females$sex)
+
+famuss.males = famuss[famuss$sex == "Male", ]
+summary(famuss.males$sex)
+```
+
+```{r}
+famuss.males.and.over25 = famuss[famuss$sex == "Male" & famuss$age > 25, ]
+range(famuss.males.and.over25$age); summary(famuss.males.and.over25$sex)
+```
+
+# Pseudorandom sampling
+```{r}
+#completely random
+sample(1:15, size = 10, replace = TRUE)
+```
+
+```{r}
+sample(1:15, size = 10, replace = FALSE)
+
+#set.seed
+set.seed(2018)
+sample(1:15, size = 10, replace = FALSE)
+
+```
+
+```{r}
+#load data
+data("LEAP")
+#simple table
+table(LEAP$treatment.group, LEAP$overall.V60.outcome)
+```
+
+```{r}
+#OI Biostat Table 1.2
+addmargins(table(LEAP$treatment.group, LEAP$overall.V60.outcome))
+```
+
+```{r}
+table(LEAP$treatment.group)
+```
+
+```{r}
+summary(LEAP$treatment.group)
+```
+

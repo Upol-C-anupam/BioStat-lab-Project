@@ -1,4 +1,4 @@
-#Some arithmatic expression
+#Some arithmetic expression
 8+3
 log(2)
 t=((121/3)*(6*3))/(pi)
