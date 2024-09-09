@@ -1,0 +1,596 @@
+---
+title: "Week_2_Lab"
+author: "Upol Chowdhury"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+source("http://www.openintro.org/stat/data/cdc.R")
+
+View(cdc)
+
+```
+
+```{r}
+# SECTION 1
+```
+
+
+```{r}
+plot(cdc$weight ~ cdc$height)
+```
+```{r}
+## Create height.m
+height.m = cdc$height*.0254
+
+## Create weight.kg
+weight.kg= cdc$weight*.454
+```
+
+```{r}
+## Create BMI
+bmi = (weight.kg)/(height.m^2)
+
+## plot height and bmi
+plot(cdc$height, bmi)
+```
+```{r}
+## Access the sixth variable of the 567th respondent
+cdc[567, 6]
+```
+\newpage
+```{r}
+## To see the height of the first ten respondents
+cdc[1:10, 5]
+```
+```{r}
+## Without column number all columns will be shown for first ten respondents
+cdc[1:10, ]
+```
+```{r }
+cdc[,6] 
+```
+```{r}
+## Create a new dataset with just 100 observations
+cdc.100 = cdc[1:100, ]
+plot(cdc.100$height, cdc.100$weight)
+
+```
+```{r}
+## Subset the variables seperately
+cdc.100.weight = cdc[1:100, 6]
+cdc.100.height = cdc[1:100, 5]
+plot(cdc.100.height, cdc.100.weight)
+```
+```{r}
+## Nest the Commands
+plot(cdc[1:100, 5], cdc[1:100, 6])
+```
+
+
+\newpage
+```{r}
+# SECTION 2
+```
+
+```{r}
+## load the oibiostat package
+library(oibiostat)
+## load the coding.mrna dataset
+data(coding.mrna)
+
+```
+
+```{r}
+
+## Column name
+print(colnames(coding.mrna))
+
+```
+
+
+```{r}
+## nrow() command to return the number of rows in the dataset.
+
+nrow(coding.mrna)
+```
+
+```{r}
+## calculate the 5-number summary
+summary(coding.mrna$transcript_length)
+```
+
+```{r}
+## create a histogram
+hist(coding.mrna$transcript_length)
+```
+
+```{r}
+## create a boxplot
+boxplot(coding.mrna$transcript_length)
+```
+
+```{r}
+## create a boxplot with lengths.subset
+boxplot(coding.mrna$transcript_length)
+```
+
+\newpage
+
+```{r}
+lengths.subset = subset(coding.mrna, coding.mrna$transcript_length < 10000)
+nrow(lengths.subset)
+                        
+## Create a histogram with lengths.subset
+hist(lengths.subset$transcript_length)                      
+                        
+```
+
+```{r}
+## Create a boxplot with lengths.subset
+boxplot(lengths.subset$transcript_length)
+```
+
+```{r}
+## Calculate summary statistics
+summary(lengths.subset$transcript_length)
+```
+```{r}
+## Subset the longer transcripts that were trimmed--ones greater than or equal 10000 bp
+trimmed.lengths = subset(coding.mrna, coding.mrna$transcript_length >= 10000)
+nrow(trimmed.lengths)
+```
+
+```{r}
+## Alternatively, subtract the length of the subset from total length
+nrow(coding.mrna) - nrow(lengths.subset)
+```
+
+```{r}
+set.seed(9817)
+sample.size = 0.1 * nrow(coding.mrna)
+transcript.sample = sample(coding.mrna$transcript_length, size = sample.size,
+replace = FALSE)
+
+## Calculate the number of transcripts in transcript.sample
+length(transcript.sample)
+
+
+```
+
+```{r}
+## Calculate five-number summary
+summary(transcript.sample)
+```
+
+```{r}
+## Create a histogram
+hist(transcript.sample)
+```
+
+```{r}
+## Create a boxplot
+boxplot(transcript.sample)
+```
+
+```{r}
+## Side-by-side boxplots of transcript lengths by chromosome. Use the command:
+boxplot(coding.mrna$transcript_length ~ coding.mrna$chromosome_name)
+```
+
+```{r}
+## Chromosome 2 subset
+chr.2 = subset(coding.mrna, coding.mrna$chromosome_name == 2)
+## Y chromosome subset
+chr.Y = subset(coding.mrna, coding.mrna$chromosome_name == "Y")
+## Compare the number of transcripts
+nrow(chr.2)
+```
+
+```{r}
+nrow(chr.Y)
+
+```
+
+```{r}
+# SECTION 3
+```
+
+```{r}
+## load the NHANES package and dataset
+library(NHANES)
+data(NHANES)
+## Numerical summaries
+summary(NHANES$Age)
+```
+
+```{r}
+print(colnames(NHANES))
+```
+
+```{r}
+nrow(NHANES)
+```
+\newpage
+
+```{r}
+## Graphical summaries
+hist(NHANES$Age)
+```
+
+```{r}
+boxplot(NHANES$Age)
+```
+
+```{r}
+## Convert to inches
+height.in = 0.39*NHANES$Height
+## Numerical summaries
+summary(height.in)
+```
+
+```{r}
+## Graphical summaries
+hist(height.in)
+```
+
+```{r}
+boxplot(height.in)
+```
+
+```{r}
+## Draw a random sample
+set.seed(5011)
+row.num = sample(1:nrow(NHANES), 200, replace = FALSE)
+nhanes.samp = NHANES[row.num, ]
+## Investigate age and height
+plot(nhanes.samp$Age, nhanes.samp$Height)
+```
+
+```{r}
+## Investigate age and weight
+plot(nhanes.samp$Age, nhanes.samp$Weight)
+```
+
+```{r}
+## What proportion of Americans at least 25 years of age are college graduates?
+
+## Subset the number of Americans at least 25 years of age
+adults = NHANES[NHANES$Age >= 25, ]
+## age and education
+summary(adults$Education)
+```
+
+```{r}
+total.adults = length(adults$Education)
+#calculations
+2016/total.adults
+```
+
+```{r}
+## What proportion of Americans at least 25 years of age with a high school degree are college graduates?
+
+## calculations
+(2016)/(1345 + 1951 + 2016)
+```
+
+```{r}
+## Numerical summary
+summary(NHANES$Poverty)
+
+med <- median(NHANES$Poverty, na.rm = TRUE)
+
+print(paste("Median =", med))
+
+
+iqr_value <- IQR(NHANES$Poverty, na.rm = TRUE)
+print(paste("IQR =", iqr_value))
+```
+
+```{r}
+## Compare the distribution of Poverty across each group in Education among adults (defined as individuals 25 years of age or older). Describe any trends or interesting observations.
+
+## Graphical summary
+boxplot(adults$Poverty ~ adults$Education)
+```
+
+```{r}
+## Construct a two-way table, with PhysActive as the row variable and Diabetes as the column variable. Among participants who are not physically active, what proportion have diabetes? What proportion of physically active participants have diabetes?
+
+## Create table
+addmargins(table(PhysActive=NHANES$PhysActive, Diabetes=NHANES$Diabetes))
+```
+
+```{r}
+## Calculations
+diabetes.not.active = 472/3675
+diabetes.not.active
+diabetes.active = 285/4646
+diabetes.active
+```
+
+```{r}
+## Calculations
+rr.diabetes = diabetes.not.active/diabetes.active
+rr.diabetes
+
+### The relative risk of diabetes is 2.09. From these data, individuals who are not physically active are twice as likely as those who are physically active to have diabetes
+
+```
+
+\newpage
+
+
+# ASSIGNMENT QUESTIONS
+
+## Q1
+```{r}
+
+### Plot Height and Age using row and column index notation
+nrow(NHANES)
+
+plot(NHANES[1:150,20], NHANES[1:150,4], xlab = "Height", ylab = "Age")
+
+```
+
+
+## Q3
+### What Proportion of Americans at least 25 years of age with a high school degree are high school graduates?
+
+```{r}
+
+
+Ans = 1345 / total.adults
+print(paste("Ans = ", Ans*100))
+```
+
+\newpage
+
+```{r}
+# DDS Case Study
+```
+
+
+```{r}
+## load the dataset
+library(oibiostat)
+data("dds.discr")
+## produce table of the first five rows
+dds.discr[1:5,]
+```
+
+```{r}
+## The distribution of annual expenditures. For most consumers, is the amount of financial support provided by the DDS relatively high or low?
+
+### Graphical summaries
+par(mfrow = c(1, 2)) ####displays plots as 1 row / 2 column layout
+hist(dds.discr$expenditures)
+boxplot(dds.discr$expenditures)
+```
+
+```{r}
+### Numerical summaries
+summary(dds.discr$expenditures)
+```
+
+```{r}
+## The distribution of age in this sample of consumers. Do consumers tend to be older or younger?
+
+par(mfrow = c(1, 2)) ####displays the following plots as 1 row / 2 column layout
+hist(dds.discr$age)
+plot(dds.discr$age.cohort)
+```
+
+```{r}
+### Numerical summaries
+summary(dds.discr$age)
+
+table(dds.discr$age.cohort)
+
+### Graphical summaries
+plot(dds.discr$ethnicity)
+```
+
+```{r}
+### Numerical summaries
+
+table(dds.discr$ethnicity)
+```
+
+```{r}
+prop.table(table(dds.discr$ethnicity)) #### converts a table of counts to proportions
+```
+
+```{r}
+### Graphical summaries
+plot(dds.discr$gender)
+```
+
+```{r}
+### Numerical summaries
+table(dds.discr$gender)
+```
+
+\newpage
+
+```{r}
+## Relationships between two variables
+```
+
+```{r}
+### Graphical summaries
+boxplot(dds.discr$expenditures ~ dds.discr$age.cohort)
+
+### Numerical summaries
+summary(dds.discr$expenditures[dds.discr$age.cohort == "0-5"])
+summary(dds.discr$expenditures[dds.discr$age.cohort == "6-12"])
+summary(dds.discr$expenditures[dds.discr$age.cohort == "13-17"])
+summary(dds.discr$expenditures[dds.discr$age.cohort == "18-21"])
+summary(dds.discr$expenditures[dds.discr$age.cohort == "22-50"])
+summary(dds.discr$expenditures[dds.discr$age.cohort == "51+"])
+```
+
+```{r}
+## Do annual expenditures seem to vary by gender?
+```
+
+```{r}
+### Graphical summaries
+boxplot(dds.discr$expenditures ~ dds.discr$gender)
+
+### Numerical summaries
+summary(dds.discr$expenditures[dds.discr$gender == "Male"])
+summary(dds.discr$expenditures[dds.discr$gender == "Female"])
+```
+
+\newpage
+
+
+```{r}
+## How does the distribution of expenditures vary by ethnic group? Does there seem to be a difference in the amount of funding that a person receives, on average, between different ethnicities?
+
+ 
+```
+
+```{r}
+### Graphical summaries
+boxplot(dds.discr$expenditures ~ dds.discr$ethnicity)
+
+### Numerical summaries
+summary(dds.discr$expenditures[dds.discr$ethnicity == "American Indian"])
+summary(dds.discr$expenditures[dds.discr$ethnicity == "Asian"])
+summary(dds.discr$expenditures[dds.discr$ethnicity == "Black"])
+summary(dds.discr$expenditures[dds.discr$ethnicity == "Hispanic"])
+summary(dds.discr$expenditures[dds.discr$ethnicity == "Multi Race"])
+summary(dds.discr$expenditures[dds.discr$ethnicity == "Native Hawaiian"])
+summary(dds.discr$expenditures[dds.discr$ethnicity == "Other"])
+summary(dds.discr$expenditures[dds.discr$ethnicity == "White not Hispanic"])
+
+### bonus: using tapply( )
+tapply(dds.discr$expenditures, dds.discr$ethnicity, summary)
+```
+\newpage
+
+```{r}
+## Compare the distribution of between Hispanic and White non-Hispanic consumers, graphically and numerically. Do Hispanic consumers, on average, seem to receive less financial support from the California DDS than a White non-Hispanic consumer?
+
+   
+```
+
+```{r}
+### Graphical summaries
+boxplot(dds.discr$expenditures[dds.discr$ethnicity == "Hispanic"],
+        dds.discr$expenditures[dds.discr$ethnicity == "White not Hispanic"],
+        names = c("Hispanic", "White not Hispanic"))
+
+### Numerical summaries
+summary(dds.discr$expenditures[dds.discr$ethnicity == "Hispanic"])
+IQR(dds.discr$expenditures[dds.discr$ethnicity == "Hispanic"])
+summary(dds.discr$expenditures[dds.discr$ethnicity == "White not Hispanic"])
+IQR(dds.discr$expenditures[dds.discr$ethnicity == "White not Hispanic"])
+
+```
+
+```{r}
+##  Recall that expenditures is strongly associated with age---older individuals tend to receive more financial support. Is there also an association between age and ethnicity, for these two ethnic groups? Examine the distribution of age within each group and describe your findings.
+
+   
+```
+
+```{r}
+### Graphical summaries
+par(mfrow = c(1, 2))  #### displays the following plots as 1 row / 2 column layout
+plot(dds.discr$age.cohort[dds.discr$ethnicity == "Hispanic"])
+plot(dds.discr$age.cohort[dds.discr$ethnicity == "White not Hispanic"])
+
+
+### Numerical summaries
+table(dds.discr$age.cohort[dds.discr$ethnicity == "Hispanic"])
+prop.table(table(dds.discr$age.cohort[dds.discr$ethnicity == "Hispanic"]))
+table(dds.discr$age.cohort[dds.discr$ethnicity == "White not Hispanic"])
+prop.table(table(dds.discr$age.cohort[dds.discr$ethnicity == "White not Hispanic"]))
+```
+
+```{r}
+## For a closer look at the relationship between age, ethnicity, and expenditures, compare how average expenditures differs by ethnicity within each age cohort. If age is indeed the primary source of the observed variation in expenditures, then there should be little difference in average expenditures between individuals in different ethnic groups but the same age cohort.
+
+```
+
+```{r}
+### subset data into two ethnicity groups
+dds.hispanics = dds.discr[dds.discr$ethnicity == "Hispanic", ]
+dds.white.non.hisp = dds.discr[dds.discr$ethnicity == "White not Hispanic", ]
+
+### calculate mean expenditures by age cohort for Hispanics
+hisp.mean.0to5 = mean(dds.hispanics$expenditures[dds.hispanics$age.cohort == 
+                                                      "0-5"])
+hisp.mean.6to12 = mean(dds.hispanics$expenditures[dds.hispanics$age.cohort == 
+                                                      "6-12"])
+hisp.mean.13to17 = mean(dds.hispanics$expenditures[dds.hispanics$age.cohort ==
+                                                     "13-17"])
+hisp.mean.18to21 = mean(dds.hispanics$expenditures[dds.hispanics$age.cohort ==
+                                                     "18-21"])
+hisp.mean.22to50 = mean(dds.hispanics$expenditures[dds.hispanics$age.cohort ==
+                                                     "22-50"])
+hisp.mean.51 = mean(dds.hispanics$expenditures[dds.hispanics$age.cohort ==
+                                                     "51+"])
+
+### calculate mean expenditures by age cohort for White non Hispanics
+nonhisp.mean.0to5 = mean(dds.white.non.hisp$expenditures[dds.white.non.hisp$
+                                                           age.cohort == "0-5"])
+nonhisp.mean.6to12 = mean(dds.white.non.hisp$expenditures[dds.white.non.hisp$
+                                                           age.cohort == "6-12"])
+nonhisp.mean.13to17 = mean(dds.white.non.hisp$expenditures[dds.white.non.hisp$
+                                                           age.cohort == "13-17"])
+nonhisp.mean.18to21 = mean(dds.white.non.hisp$expenditures[dds.white.non.hisp$
+                                                           age.cohort == "18-21"])
+nonhisp.mean.22to50 = mean(dds.white.non.hisp$expenditures[dds.white.non.hisp$
+                                                           age.cohort == "22-50"])
+nonhisp.mean.51 = mean(dds.white.non.hisp$expenditures[dds.white.non.hisp$
+                                                           age.cohort == "51+"])
+
+### calculate differences in mean expenditures between ethnicity groups
+hisp.means = c(hisp.mean.0to5, hisp.mean.6to12, hisp.mean.13to17,
+               hisp.mean.18to21, hisp.mean.22to50, hisp.mean.51)
+hisp.means
+
+nonhisp.means = c(nonhisp.mean.0to5, nonhisp.mean.6to12, nonhisp.mean.13to17,
+                  nonhisp.mean.18to21, nonhisp.mean.22to50, nonhisp.mean.51)
+nonhisp.means
+
+nonhisp.means - hisp.means
+
+### bonus: using tapply( )
+hisp.means = tapply(dds.hispanics$expenditures, dds.hispanics$age.cohort, mean)
+nonhisp.means = tapply(dds.white.non.hisp$expenditures, dds.white.non.hisp$age.cohort, 
+mean)
+nonhisp.means - hisp.means
+
+```
+
+```{r}
+## Simpson's paradox
+
+## Calculate the overall weighted average expenditures for Hispanics and for White non- Hispanics, using the proportions of individuals in each age cohort (Question 7) and the average expenditures for each Cohort (Question 8). How does the weighting lead to overall average expenditures for White non-Hispanics to be higher than for Hispanics?
+```
+
+```{r}
+### calculations
+hisp.weights = prop.table(table(dds.discr$age.cohort[dds.discr$ethnicity ==
+                                                          "Hispanic"]))
+hisp.weights
+hisp.weights*hisp.means
+sum(hisp.weights*hisp.means)
+
+nonhisp.weights = prop.table(table(dds.discr$age.cohort[dds.discr$ethnicity ==
+                                                          "White not Hispanic"]))
+nonhisp.weights
+nonhisp.weights*nonhisp.means
+sum(nonhisp.weights*nonhisp.means)
+```
+
