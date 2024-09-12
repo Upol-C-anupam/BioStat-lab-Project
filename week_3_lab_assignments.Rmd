@@ -1,0 +1,178 @@
+---
+title: "Week_3_Intro_to_probability"
+author: "Upol Chowdhury"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+#Introduction
+```{r}
+#define parameters
+
+prob.heads = 0.6
+number.tosses = 5
+
+#Stimulate the coin tosses
+outcomes =  sample(c(0,1), size = number.tosses, prob = c(1 - prob.heads, prob.heads), replace = TRUE)
+
+#view the resutls
+table(outcomes)
+```
+```{r}
+#Store the results in single number
+
+total.heads = sum(outcomes)
+total.heads
+
+```
+```{r}
+#deifne parameter
+prob.heads = 0.6
+number.tosses = 5
+number.replicates = 10000
+
+#create empty vector to store outcomes
+outcomes = vector("numeric", number.replicates)
+
+#set the seed for a pseudo-random sample
+set.seed(2018)
+```
+
+```{r}
+#simulate the coin tosses
+for(k in 1:number.replicates){
+  
+  outcomes.replicate = sample(c(0, 1), size = number.tosses,
+                      prob = c(1 - prob.heads, prob.heads), replace = TRUE)
+  
+  outcomes[k] = sum(outcomes.replicate)
+}
+  
+#view the results
+outcomes
+
+
+```
+
+```{r}
+addmargins(table(outcomes))
+```
+
+```{r}
+heads.3 = (outcomes == 3)
+table(heads.3)
+```
+```{r}
+outcomes[4]
+```
+```{r}
+prob.heads= 0.6
+10*prob.heads^3*(1-prob.heads)^2
+```
+
+```{r}
+prob.false.positive = 0.012
+prob.true.negative = 1 - prob.false.positive
+
+1-prob.true.negative^150
+```
+
+```{r}
+prob.false.positive = 0.012
+number.employees = 150
+
+#set the seed for a pseudo-random sample
+set.seed(2018)
+#simulate the tests
+results = sample(c(0,1), size = number.employees,
+prob = c(1 - prob.false.positive, prob.false.positive),
+replace = TRUE)
+#view the results
+table(results)
+
+
+```
+```{r}
+sum(results)
+```
+ 
+```{r}
+#define parameters
+prob.false.positive = 0.012
+number.employees = 150
+number.replicates = 100000
+#create empty vector to store results
+results = vector("numeric", number.replicates)
+#set the seed for a pseudo-random sample
+set.seed(2018)
+#simulate the tests
+for(k in 1:number.replicates){
+results.replicate = sample(c(0,1), size = number.employees,
+prob = c(1 - prob.false.positive, prob.false.positive),
+replace = TRUE)
+results[k] = sum(results.replicate)
+}
+
+#view the results
+table(results)
+```
+ 
+```{r}
+at.least.1.pos = (results >= 1)
+table(at.least.1.pos)
+```
+```{r}
+#define parameters
+specificity = 0.95
+number.women = 50
+number.replicates = 100000
+#create empty vector to store results
+results = vector("numeric", number.replicates)
+#set the seed for a pseudo-random sample
+#set.seed(2018)
+#simulate the tests
+for(k in 1:number.replicates){
+results.replicate = sample(c(0,1), size = number.women,
+prob = c(specificity, 1 - specificity),
+replace = TRUE)
+results[k] = sum(results.replicate)
+}
+#view the results
+table(results)
+
+at.most.1.pos = (results <= 1)
+table(at.most.1.pos)
+ 
+```
+ 
+```{r}
+#define parameters
+specificity = 0.99
+number.women = 50
+number.replicates = 100000
+#create empty vector to store results
+results = vector("numeric", number.replicates)
+#set the seed for a pseudo-random sample
+#set.seed(2018)
+#simulate the tests
+for(k in 1:number.replicates){
+results.replicate = sample(c(0,1), size = number.women,
+prob = c(specificity, 1 - specificity),
+replace = TRUE)
+results[k] = sum(results.replicate)
+}
+#view the results
+table(results)
+```
+```{r}
+at.most.1.pos = (results <= 1)
+table(at.most.1.pos)
+```
+#Answer:
+ 
+## The probability of no more than one woman will test positive if none have breast cancer increased to 91%. The probabilty for the previous specificty of 95% was 28%. Thus, The test with 0.99 specificity is better because it results in far fewer false positives when we are doing for large number of replicates. This means fewer women without breast cancer will be incorrectly told they might have it. 
