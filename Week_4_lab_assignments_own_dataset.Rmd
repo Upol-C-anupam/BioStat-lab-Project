@@ -1,0 +1,210 @@
+---
+title: "Week_4_Lab_assignment_own_dataset"
+author: "Upol Chowdhury"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+library(readr)
+```
+
+```{r}
+data <- read_csv("G:/datasets_for_biostat/Data_Set.csv")
+```
+```{r}
+spec(data)
+```
+# Conditional Probability Lab
+
+```{r}
+
+n <- nrow(data)
+n
+
+```
+```{r}
+names(data)
+```
+
+```{r}
+
+table(data$Gender)
+
+
+```
+
+```{r}
+#proportion
+prop.table(table(data$Gender))
+```
+
+```{r}
+names(data)[names(data) == "Disease type"] <- "disease_type"
+
+
+names(data)
+```
+
+## Summary of the disease types
+```{r}
+head(data$disease_type)
+
+
+table(data$disease_type)
+```
+
+
+```{r}
+
+data$disease_category <- ifelse(data$disease_type %in% c("COPD", "Bronchial asthma", "Pneumonia"), 
+                                "Respiratory", "Other")
+
+
+table(data$disease_category)
+
+```
+## Create a contingency table
+
+```{r}
+cont_table <- table(data$Gender, data$disease_category)
+print(cont_table)
+```
+## Calculate marginal probabilities
+
+```{r}
+total <- sum(cont_table)
+total
+```
+
+
+```{r}
+p_male <- sum(cont_table["Male",]) / total
+p_male
+```
+
+```{r}
+p_female <- sum(cont_table["Female",]) / total
+p_female
+```
+
+```{r}
+p_respiratory <- sum(cont_table[,"Respiratory"]) / total
+p_respiratory
+```
+
+```{r}
+p_other <- sum(cont_table[,"Other"]) / total
+p_other
+```
+
+## Calculate Conditional Probabilities
+
+```{r}
+p_respiratory_male <- cont_table["Male","Respiratory"] / sum(cont_table["Male",])
+p_respiratory_male
+p_respiratory_female <- cont_table["Female","Respiratory"] / sum(cont_table["Female",])
+p_respiratory_female
+
+```
+# Calculate prevalence, sensitivity, and specificity 
+
+## I have created a binary outcome: Respiratory disease (1) vs. No respiratory disease (0) (used help from google for the syntax)
+```{r}
+data$respiratory_disease <- ifelse(data$disease_type %in% c("COPD", "Bronchial asthma", "Pneumonia"), 1, 0)
+```
+
+
+## I have created a binary predictor: Wheezing present (1) vs. Wheezing absent (0) (used help from google for the syntax)
+```{r}
+data$wheezing_present <- ifelse(data$Wheezing %in% c("Low", "Moderate", "High"), 1, 0)
+```
+
+
+## Create a contingency table
+```{r}
+cont_table <- table(data$wheezing_present, data$respiratory_disease)
+print("Contingency Table:")
+print(cont_table)
+```
+
+
+### It provides a direct view of the relationship between wheezing and respiratory disease in my dataset.
+
+## Calculate prevalence
+
+```{r}
+prevalence <- sum(data$respiratory_disease) / nrow(data)
+prevalence
+```
+
+
+## Calculate sensitivity (proportion of those with wheezing among those with respiratory disease)
+```{r}
+sensitivity <- cont_table["1", "1"] / sum(cont_table[, "1"])
+sensitivity
+```
+
+
+## Calculate specificity (proportion of those without wheezing among those without respiratory disease)
+```{r}
+specificity <- cont_table["0", "0"] / sum(cont_table[, "0"])
+specificity
+```
+
+## Simulation approach
+```{r}
+# Set population size to number of rows in the dataset
+population.size <- nrow(data)
+
+# Create empty vectors to store results
+disease.status <- vector("numeric", population.size)
+test.result <- vector("numeric", population.size)
+
+
+
+# Assign disease status
+disease.status <- sample(c(0,1), size = population.size,
+                         prob = c(1 - prevalence, prevalence),
+                         replace = TRUE)
+
+# Assign test result
+for(k in 1:population.size){
+  if(disease.status[k] == 0){
+    test.result[k] = sample(c(0,1), size = 1,
+                            prob = c(specificity, 1 - specificity))
+  }
+  if(disease.status[k] == 1){
+    test.result[k] = sample(c(0,1), size = 1,
+                            prob = c(1 - sensitivity, sensitivity))
+  }
+}
+#create matrix of disease status and test result (part c)
+disease.status.and.test.result = cbind(disease.status, test.result)
+#create a table of test result by disease status
+addmargins(table(test.result, disease.status))
+```
+## Calculate PPV
+
+```{r}
+ppv = sum(test.result[disease.status == 1])/sum(test.result)
+ppv
+```
+
+## Calculate NPV
+
+```{r}
+npv = sum(test.result == 0 & disease.status == 0) / sum(test.result == 0)
+npv
+```
+
